@@ -11,7 +11,7 @@ class UpdateCustomersRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class UpdateCustomersRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => [
+                'present', 'sometimes', 'nullable', 'string', 'min:2', 'max:255'
+            ],
+            'address' => [
+                'present', 'sometimes', 'nullable', 'string', 'min:2', 'max:255'
+            ],
         ];
     }
 }

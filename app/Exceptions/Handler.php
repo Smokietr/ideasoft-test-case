@@ -2,7 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -23,8 +26,36 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+
         });
+    }
+
+    public function render($request, Throwable $e)
+    {
+        if ($request->ajax() || $request->wantsJson()) {
+
+            $e = $this->prepareException($e);
+
+            if ($e instanceof ModelNotFoundException) {
+                $e = new NotFoundHttpException($e->getMessage(), $e);
+            } elseif ($e instanceof NotFoundHttpException) {
+                return response()->json(['error' => 'Resource not found'], 404);
+            } elseif ($e instanceof \Illuminate\Auth\AuthenticationException) {
+                return $this->unauthenticated($request, $e);
+            } elseif ($e instanceof \Illuminate\Validation\ValidationException) {
+                return $this->convertValidationExceptionToResponse($e, $request);
+            }
+
+            $response = [];
+
+            $response['error'] = $e->getMessage();
+
+            $statusCode = method_exists($e, 'getStatusCode')
+                ? $e->getStatusCode()
+                : 500;
+            return response()->json($response, $statusCode);
+        }
+        return parent::render($request, $e);
     }
 }
