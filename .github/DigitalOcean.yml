@@ -1,0 +1,77 @@
+name: Digital Ocean
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@main
+      - name: Copy .env file
+        run : cp .env.example .env
+      - name : Add PUBLISH_PORT to .env file
+        run: echo 'PUBLISH_PORT=${{ secrets.PUBLISH_PORT }}' >> .env
+      - name : Add APP_DOMAIN to .env file
+        run: echo 'APP_DOMAIN=${{ secrets.APP_DOMAIN }}' >> .env
+      - name : Add APP_URL to .env file
+        run: echo 'APP_URL=https://www.${{ secrets.APP_DOMAIN }}' >> .env
+      - name : Add Mysql Host to .env file
+        run: echo 'DB_HOST=${{ secrets.DB_HOST }}' >> .env
+      - name : Add Mysql Database to .env file
+        run: echo 'DB_DATABASE=${{ secrets.DB_DATABASE }}' >> .env
+      - name : Add Mysql Username to .env file
+        run: echo 'DB_USERNAME=${{ secrets.DB_USERNAME }}' >> .env
+      - name : Add Mysql Password to .env file
+        run: echo 'DB_PASSWORD=${{ secrets.DB_PASSWORD }}' >> .env
+      - name : Add Mysql Port to .env file
+        run: echo 'DB_PORT=${{ secrets.DB_PORT }}' >> .env
+      - name : Add JWT_SECRET to .env file
+        run: echo 'JWT_SECRET=${{ secrets.JWT_SECRET }}' >> .env
+      - name : Add DO_ACCESS_KEY_ID to .env file
+        run: echo 'DO_ACCESS_KEY_ID=${{ secrets.DO_ACCESS_KEY_ID }}' >> .env
+      - name : Add DO_SECRET_ACCESS_KEY to .env file
+        run: echo 'DO_SECRET_ACCESS_KEY=${{ secrets.DO_SECRET_ACCESS_KEY }}' >> .env
+      - name : Add DO_ENDPOINT to .env file
+        run: echo 'DO_ENDPOINT=${{ secrets.DO_ENDPOINT }}' >> .env
+      - name : Add DO_DEFAULT_REGION to .env file
+        run: echo 'DO_DEFAULT_REGION=${{ secrets.DO_DEFAULT_REGION }}' >> .env
+      - name : Add DO_BUCKET to .env file
+        run: echo 'DO_BUCKET=${{ secrets.DO_BUCKET }}' >> .env
+      - name : Add DO_SPACES_URL to .env file
+        run: echo 'DO_SPACES_URL=${{ secrets.DO_SPACES_URL }}' >> .env
+      - name : Add DO_URL to .env file
+        run: echo 'DO_URL=${{ secrets.DO_URL }}' >> .env
+      - name : Add DEPLOY_SECRET_KEY to .env file
+        run: echo 'DEPLOY_SECRET_KEY=${{ secrets.DEPLOY_SECRET_KEY }}' >> .env
+      - name : Add MAIL_HOST to .env file
+        run: echo 'MAIL_HOST=${{ secrets.MAIL_HOST }}' >> .env
+      - name : Add MAIL_PORT to .env file
+        run: echo 'MAIL_PORT=${{ secrets.MAIL_PORT }}' >> .env
+      - name : Add MAIL_ENCRYPTION to .env file
+        run: echo 'MAIL_ENCRYPTION=${{ secrets.MAIL_ENCRYPTION }}' >> .env
+      - name : Add MAIL_USERNAME to .env file
+        run: echo 'MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}' >> .env
+      - name : Add MAIL_PASSWORD to .env file
+        run: echo 'MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}' >> .env
+      - name : Add MAIL_FROM_ADDRESS to .env file
+        run: echo 'MAIL_FROM_ADDRESS=${{ secrets.MAIL_USERNAME }}' >> .env
+      - name : Add ALGOLIA_APP_ID to .env file
+        run: echo 'ALGOLIA_APP_ID=${{ secrets.ALGOLIA_APP_ID }}' >> .env
+      - name : Add ALGOLIA_SECRET to .env file
+        run: echo 'ALGOLIA_SECRET=${{ secrets.ALGOLIA_SECRET }}' >> .env
+      - name : Add GOOGLE_ADSENSE_ACCOUNT to .env file
+        run: echo 'GOOGLE_ADSENSE_ACCOUNT=${{ secrets.GOOGLE_ADSENSE_ACCOUNT }}' >> .env
+      - name : Add GOOGLE_ANALYTICS_ID to .env file
+        run: echo 'GOOGLE_ANALYTICS_ID=${{ secrets.GOOGLE_ANALYTICS_ID }}' >> .env
+      - name : Add GOOGLE_ANALYTICS_PROPERTY_ID to .env file
+        run: echo 'GOOGLE_ANALYTICS_PROPERTY_ID=${{ secrets.GOOGLE_ANALYTICS_PROPERTY_ID }}' >> .env
+      - name : Add GOOGLE_MAPS_API_KEY to .env file
+        run: echo 'GOOGLE_MAPS_API_KEY=${{ secrets.GOOGLE_MAPS_API_KEY }}' >> .env
+      - name : Add SESSION_DOMAIN to .env file
+        run: echo 'SESSION_DOMAIN=${{ secrets.SESSION_DOMAIN }}' >> .env
+
+      - name: Build and Run
+        run: docker-compose build && docker-compose up -d
